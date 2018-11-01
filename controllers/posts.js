@@ -44,16 +44,16 @@ module.exports = app => {
         })
     })
 
+    app.get('/posts/new', (req,res)=>{
+        res.render('posts-new');
+    })
+
     app.get('/posts/:postId', (req,res)=>{
         Post.findById(req.params.postId).then((post)=>{
             res.render('post-show', {post: post});
         }).catch((err)=>{
             console.log(err.message);
         })
-    })
-
-    app.get('/posts/new', (req,res)=>{
-        res.render('posts-new');
     })
 
     app.post('/posts', (req,res)=>{
@@ -65,6 +65,16 @@ module.exports = app => {
             console.log(err.message);
         })
     })
+
+    app.get("/n/:subreddit", function(req, res) {
+        Post.find({ subreddit: req.params.subreddit })
+        .then(posts => {
+            res.render("posts-index", { posts });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    });
 
     app.listen(process.env.PORT || 5000, () => {
         console.log('App listening on port 5000!');
