@@ -4,7 +4,9 @@ var exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 
-const posts = require('./controllers/posts.js')
+const posts = require('./controllers/posts.js');
+const comments = require('./controllers/comments-controller.js');
+const auth = require('./controllers/auth.js');
 
 const app = express();
 
@@ -18,5 +20,7 @@ app.use(methodOverride('_method'));
 // app.use(expressValidator());
 
 posts(app);
+comments(app);
+auth(app);
 
 module.exports = app;

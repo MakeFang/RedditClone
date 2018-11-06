@@ -49,7 +49,7 @@ module.exports = app => {
     })
 
     app.get('/posts/:postId', (req,res)=>{
-        Post.findById(req.params.postId).then((post)=>{
+        Post.findById(req.params.postId).populate('comments').then((post)=>{
             res.render('post-show', {post: post});
         }).catch((err)=>{
             console.log(err.message);
