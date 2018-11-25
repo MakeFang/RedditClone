@@ -1,4 +1,5 @@
 const Post = require('../models/post.js')
+const User = require('../models/user.js')
 //
 // function posts(app){
 //
@@ -33,6 +34,9 @@ module.exports = app => {
 
     app.get('/', (req, res)=>{
         // res.send('Hello World');
+        // var currentUser = req.user;
+
+        console.log(req.cookies);
         res.render('home');
     })
 
@@ -49,21 +53,45 @@ module.exports = app => {
     })
 
     app.get('/posts/:postId', (req,res)=>{
-        Post.findById(req.params.postId).populate('comments').then((post)=>{
+        Post.findById(req.params.postId).populate('comments author').populate({
+            path: 'comments',
+            populate: {
+                path: 'author',
+                model: 'User'
+            }
+        })
+        .then((post)=>{
+            console.log(post);
             res.render('post-show', {post: post});
-        }).catch((err)=>{
+        })
+        .catch((err)=>{
             console.log(err.message);
         })
     })
 
     app.post('/posts', (req,res)=>{
-        console.log(req.body);
-        Post.create(req.body).then((post)=>{
-            console.log(post);
-            res.redirect('/');
-        }).catch((err)=>{
-            console.log(err.message);
+        let post = new Post(req.body);
+        post.author = req.user._id;
+
+        post.save()
+        .then((post)=>{
+            return User.findById(req.user._id);
         })
+        .then((user)=>{
+            user.posts.unshift(post);
+            user.save();
+            res.redirect('/posts/' + post._id)
+        })
+        .catch((err)=>{
+            console.log(err.message);
+        });
+        // console.log(req.body);
+        // Post.create(req.body).then((post)=>{
+        //     console.log(post);
+        //     res.redirect('/');
+        // }).catch((err)=>{
+        //     console.log(err.message);
+        // })
     })
 
     app.get("/n/:subreddit", function(req, res) {
