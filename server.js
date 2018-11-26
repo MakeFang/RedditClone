@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 var cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const expressValidator = require('express-validator');
 
 const posts = require('./controllers/posts.js');
 const comments = require('./controllers/comments-controller.js');
@@ -54,7 +55,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
-// app.use(expressValidator());
+app.use(expressValidator());
 app.use(checkAuth);
 app.use(displayAuth);
 app.use(renderUser);

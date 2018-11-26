@@ -3,13 +3,16 @@ const chaiHttp = require('chai-http');
 const should = chai.should();
 const server = require('../server.js');
 const Post = require('../models/post.js')
-
+const User = require('../models/user.js');
+const agent = chai.request.agent(server);
 chai.use(chaiHttp);
+
 
 const fakePost = {
     title: "Fake Title",
     url: "https://fakeurl.com",
-    summary: "Fake Summary"
+    summary: "Fake Summary",
+    subreddit: "Fake"
 }
 
 describe('site', ()=>{
@@ -31,6 +34,15 @@ describe('site', ()=>{
 
 describe('Posts', ()=>{
 
+    before(done => {
+        agent
+        .post("/login")
+        .send({ username: "testone", password: "password" })
+        .end(function(err, res) {
+            done();
+        });
+    });
+
     after(()=>{
         Post.deleteMany({url: "https://fakeurl.com"}).exec((err,posts)=>{
             console.log(posts);
@@ -39,7 +51,8 @@ describe('Posts', ()=>{
     })
 
     it('should create with valid attributes at POST /posts', (done)=>{
-        chai.request(server)
+        // chai.request(server)
+        agent
         .post('/posts')
         .send(fakePost)
         .end((err,res)=>{
