@@ -6,8 +6,10 @@ module.exports = function(app) {
 
     app.post("/posts/:postId/comments", function(req, res) {
         // INSTANTIATE INSTANCE OF MODEL
+        req.body.author = req.user._id;
+        req.body.postId = req.params.postId;
         let comment = new Comment(req.body);
-        comment.author = req.user._id;
+        // comment.author = req.user._id;
 
         // SAVE INSTANCE OF Comment MODEL TO DB
         comment.save().then((comment) => {
@@ -30,5 +32,17 @@ module.exports = function(app) {
             console.log(err);
         });
     });
+
+    // app.post("/posts/:postId/comments", (req,res)=>{
+    //     Post.findById(req.params.postId).exec((err,post)=>{
+    //         req.body.author = req.user._id;
+    //         // let comment = new Comment(req.body);
+    //         post.comments.unshift(req.body);
+    //         // post.save();
+    //         comment.save();
+    //
+    //         return res.redirect(`/posts/${post._id}`);
+    //     });
+    // });
 
 };

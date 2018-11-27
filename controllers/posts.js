@@ -53,7 +53,16 @@ module.exports = app => {
     })
 
     app.get('/posts/:postId', (req,res)=>{
-        Post.findById(req.params.postId).populate('comments author').populate({
+        // Post.findById(req.params.postId).populate('comments author').populate({
+        //     path: 'comments',
+        //     populate: {
+        //         path: 'author',
+        //         model: 'User'
+        //     }
+        // })
+        Post.findById(req.params.postId)
+        .populate('author', 'username')
+        .populate({
             path: 'comments',
             populate: {
                 path: 'author',

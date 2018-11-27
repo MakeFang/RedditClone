@@ -13,7 +13,9 @@
 </form>
 {{#if currentUser}}
     {{#each post.comments}}
-        <p>{{this.author.username}}</p>
+        {{> comment}}
+        <!-- <p>{{this.author.username}}</p>
         <p>{{this.content}}</p>
+        <a href="/posts/{{../post._id}}/comments/{{this._id}}/replies/new">Reply</a> -->
     {{/each}}
 {{/if}}

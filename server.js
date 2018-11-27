@@ -12,6 +12,7 @@ const expressValidator = require('express-validator');
 const posts = require('./controllers/posts.js');
 const comments = require('./controllers/comments-controller.js');
 const auth = require('./controllers/auth.js');
+const replies = require('./controllers/replies.js');
 
 const app = express();
 
@@ -63,5 +64,6 @@ app.use(renderUser);
 posts(app);
 comments(app);
 auth(app);
+replies(app);
 
 module.exports = app;
