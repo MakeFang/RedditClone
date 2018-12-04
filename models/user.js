@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username: {type: String, required: true},
     password: { type: String, select: false },
+    isAdmin: { type: Boolean, default: false },
     posts : [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments : [{ type: Schema.Types.ObjectId, ref: "Comment"}]
 },{

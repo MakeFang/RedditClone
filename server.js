@@ -31,14 +31,33 @@ const checkAuth = (req, res, next) => {
 };
 
 const displayAuth = (req,res,next)=>{
+    const adminPath = ['/admin'];
     const insecurePath = ['/','/sign-up','/login'];
     let _ = require('underscore');
     if (req.user || _.contains(insecurePath, req.path)){
-        console.log("authorized ");
+        console.log("authenticated");
+        if (req.user && !req.user.isAdmin && _.contains(adminPath, req.path)){
+            console.log("UNAUTHORIZED");
+            return res.send('UNAUTHORIZED').status(403);
+        }else{
+            return next();
+        }
+    }else{
+        console.log("UNAUTHENTICATED");
+        return res.status(401).send('UNAUTHENTICATED');
+    }
+    next();
+}
+
+const displayAuthorization = (req,res,next)=>{
+    const adminPath = ['/admin'];
+    let _ = require('underscore');
+    if (req.user.isAdmin && _.contains(adminPath, req.path)){
+        console.log("authorized");
         return next();
     }else{
         console.log("UNAUTHORIZED");
-        return res.status(401).send('UNAUTHORIZED');
+        return res.status(401).send('UNAUTHENTICATED');
     }
     next();
 }
@@ -59,6 +78,7 @@ app.use(cookieParser());
 app.use(expressValidator());
 app.use(checkAuth);
 app.use(displayAuth);
+// app.use(displayAuthorization);
 app.use(renderUser);
 
 posts(app);

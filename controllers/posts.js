@@ -32,6 +32,14 @@ const User = require('../models/user.js')
 
 module.exports = app => {
 
+    app.get('/admin', (req, res)=>{
+        // res.send('Hello World');
+        // var currentUser = req.user;
+
+        console.log(req.cookies);
+        res.send('admin');
+    })
+
     app.get('/', (req, res)=>{
         // res.send('Hello World');
         // var currentUser = req.user;

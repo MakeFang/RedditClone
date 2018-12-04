@@ -44,6 +44,11 @@
                     <a href="/posts/new" class="btn btn-primary navbar-btn">New Post</a>
                 </li>
                 {{/if}}
+                {{#if currentUser.isAdmin}}
+                    <li class="nav-item">
+                        <a href="/admin" class="btn btn-primary navbar-btn">ADMIN</a>
+                    </li>
+                {{/if}}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {{#if currentUser}}

@@ -11,7 +11,7 @@ module.exports = (app) => {
         const user = new User(req.body);
         user.save()
         .then((user)=>{
-            let token = jwt.sign({ _id: user._id }, process.env.SECRET, { expiresIn: "60 days" });
+            let token = jwt.sign({ _id: user._id, username: user.username, isAdmin: user.isAdmin }, process.env.SECRET, { expiresIn: "60 days" });
             res.cookie('nToken', token, { maxAge: 900000, httpOnly: true });
             res.redirect("/");
         })
@@ -33,7 +33,7 @@ module.exports = (app) => {
     app.post('/login', (req, res)=>{
         const username = req.body.username;
         const password = req.body.password;
-        User.findOne({username}, "username password")
+        User.findOne({username}, "username password isAdmin")
         .then((user)=>{
             if (!user){
                 return res.status(401).send({ message: "Wrong Username or Password" });
@@ -45,7 +45,8 @@ module.exports = (app) => {
                     return res.status(401).send({ message: "Wrong Username or password" });
                 }
                 // Create a token
-                const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET, {
+                console.log(`user is ${user}`);
+                const token = jwt.sign({ _id: user._id, username: user.username, isAdmin: user.isAdmin }, process.env.SECRET, {
                     expiresIn: "60 days"
                 });
                 // Set a cookie and redirect to root
