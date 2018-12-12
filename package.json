@@ -4,6 +4,7 @@
   "description": "reddit tutorial",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "mocha"
   },
   "author": "",
